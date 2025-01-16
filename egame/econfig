@@ -1,0 +1,35 @@
+include "config.path"
+
+-- preload = "./examples/preload.lua"	-- run preload.lua before every lua service run
+thread = 8
+logger = nil
+logpath = "."
+harbor = 2
+address = "127.0.0.1:2526"
+master = "127.0.0.1:2013"
+start = "node_main"	-- main script
+bootstrap = "snlua bootstrap"	-- The service for bootstrap
+-- standalone = "0.0.0.0:2013"
+-- snax_interface_g = "snax_g"
+cpath = root.."cservice/?.so"
+-- daemon = "./skynet.pid"
+
+---自定义变量
+debug_console = "8010"
+--socket信息
+socket_ip = "0.0.0.0"
+socket_port = 8001
+--db信息
+host = "127.0.0.1"
+port = 3606
+database = "skynet"
+user = "root"
+pwd = "root123456"
+db_max_num = 30
+db_init_num = 5
+--节点信息
+node = "game_node1"
+server_id = 1
+node_list = "center_node-127.0.0.1:7001;game_node1-127.0.0.1:7002"
+center_node = "center_node"
+cls_type = 0
