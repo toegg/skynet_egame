@@ -24,6 +24,13 @@ user = "root"
 pwd = "root123456"
 db_max_num = 30
 db_init_num = 5
+--redis信息
+redis_host = "127.0.0.1"
+redis_port = 6379
+redis_db = 0
+redis_auth = "123456"
+redis_max_num = 30
+redis_init_num = 10
 --节点信息
 node = "center_node"
 server_id = 11

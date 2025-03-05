@@ -1,4 +1,4 @@
-local skynet = require "skynet"
+local skynet = require "skynetex"
 local queue = require "skynet.queue"
 require "common.etool"
 require "player.player_base"
@@ -18,15 +18,15 @@ end
 
 --重连
 function CMD.reconnect()
-    PlayerSet({online = 1})
+    player_handle.reconnect()
     skynet.ret(skynet.pack(true))
 end
 
 --延迟登出游戏
 function CMD.delay_logout()
     local player_info = GetPlayer()
-    PlayerSet({online = 0})
     log_print("game role delay_logout:", player_info.id)
+    player_handle.delay_logout()
     skynet.timeout(DelayLogoutTime * 100, CMD.logout)
 end
 
@@ -35,7 +35,7 @@ function CMD.logout()
     local player_info = GetPlayer()
     if player_info.online <= 0 then
         log_print("game role logout:", player_info.id)
-        player_handle.remove_player_online(player_info.id)
+        player_handle.logout()
         skynet.exit() 
     end
 end
@@ -67,7 +67,7 @@ end
 --初始化服务
 skynet.start(function(...)
     -- 注册skynet.dispatch处理函数
-    skynet.dispatch("lua", function (session, source, cmd, ...) 
+    skynet.dispatchex("lua", function (session, source, cmd, ...) 
         local f = assert(CMD[cmd])
         local status, err = skynet.pcall(q, f, ...)
         if not status then

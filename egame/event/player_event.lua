@@ -51,7 +51,7 @@ end
 
 function role_event.init_event(role_id)
     for k, v in pairs(EVENT_LIST) do
-         local list = get_events(v, role_id)
+         local list = get_events(v)
          if table_len(list) > 0 then
              role_event.event_list[v] = list
          end

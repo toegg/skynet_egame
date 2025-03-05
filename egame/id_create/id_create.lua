@@ -1,9 +1,10 @@
-local skynet = require "skynet"
+local skynet = require "skynetex"
 require "skynet.manager"
 local queue = require "skynet.queue"
 local db = require "db.db_api"
 require "def.def_id_create"
 require "common.etool"
+require "def.def_error"
 
 local q = queue()
 
@@ -23,8 +24,14 @@ function CMD.init()
     local max_id = get_max_id()
 
     --自增id表最大id
-    local result = db.query(string.format("select count from id_create where type = %d", idType))
-    if result.err == nil and #result > 0 then
+    -- local result = db.query(string.format("select count from id_create where type = %d", idType))
+    -- if result.err == nil and #result > 0 then
+    --     auto_id = result[1].count
+    -- else
+    --     auto_id = 0
+    -- end
+    local result = skynet.call(".cache.conf.cache_id_create", "lua", "fetch", "id_create", idType)
+    if #result > 0 then
         auto_id = result[1].count
     else
         auto_id = 0
@@ -59,7 +66,7 @@ skynet.start(function()
         skynet.name(".id_player", skynet.self())
     end
     -- 注册skynet.dispatch处理函数
-    skynet.dispatch("lua", function (session, source, cmd, ...) 
+    skynet.dispatchex("lua", function (session, source, cmd, ...) 
         local f = assert(CMD[cmd])
         local status, err = skynet.pcall(q, f, ...)
         if not status then
@@ -72,7 +79,7 @@ end)
 function get_max_id()
     local result = {}
     if idType == PLAYER_ID then
-        --玩家表最大id
+        --玩家表最大id(启动初始化全表搜，用sql，不用redis)
         result = db.query("select role_id from player where 1=1 order by role_id desc limit 1") 
         if result.err == nil and #result > 0 then
             return result[1].role_id
@@ -82,8 +89,12 @@ function get_max_id()
 end
 
 function update_count(lastId) 
-    local res = db.query(string.format("update id_create set count = %d where type = %d", lastId, idType))   
-    if res.err then
-        log_print("id_create update_count Err:", idType, res.err)
+    -- local res = db.query(string.format("update id_create set count = %d where type = %d", lastId, idType))   
+    -- if res.err then
+    --     log_print("id_create update_count Err:", idType, res.err)
+    -- end
+    local res = skynet.call(".cache.conf.cache_id_create", "lua", "replace", "id_create", idType, { type = idType, count = lastId})
+    if res ~= ERROR_SUCCESS then
+        log_print("id_create update_count Err:", idType, res)
     end
 end

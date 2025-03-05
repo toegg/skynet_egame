@@ -1,4 +1,4 @@
-local skynet = require "skynet"
+local skynet = require "skynetex"
 local sd = require "skynet.sharedata"
 local queue = require "skynet.queue"
 local misc = require "common.misc"
@@ -70,7 +70,7 @@ end
 
 skynet.start(function()
     --服务的消息处理
-    skynet.dispatch("lua", function(session, source, cmd, ...)
+    skynet.dispatchex("lua", function(session, source, cmd, ...)
         local f = assert(CMD[cmd])
         local status, err = skynet.pcall(q, f, ...)
         if not status then

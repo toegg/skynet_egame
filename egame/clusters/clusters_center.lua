@@ -1,4 +1,4 @@
-local skynet = require "skynet"
+local skynet = require "skynetex"
 local cluster = require "skynet.cluster"
 require "skynet.manager"
 require "common.etool"
@@ -145,7 +145,7 @@ end
 --------------启动服务
 skynet.start(function()
     --服务的消息处理
-    skynet.dispatch("lua", function(session, source, cmd, ...)
+    skynet.dispatchex("lua", function(session, source, cmd, ...)
         local f = assert(CMD[cmd])
         local status, err = skynet.pcall(f, ...)
         if not status then

@@ -30,6 +30,13 @@ function player_handle.cmd_handle(cmd, data)
     elseif cmd == 10010 then  
         --测试
         net.write(cmd, data)
+    elseif cmd == 10011 then
+        if player_handle.count then
+            player_handle.count = player_handle.count + 1
+        else
+            player_handle.count  = 1
+        end
+        log_print("print count", player_handle.count)
     end
 end
 
@@ -44,6 +51,32 @@ function player_handle.handle(mod, func, ...)
         local h = skynet.load(handler[mod])
         h[func](...)
     end
+end
+
+--重连
+function player_handle.reconnect()
+    PlayerSet({online = 1})
+    --派发事件
+    pe.event_dispatch(EVENT_RECONNECT)    
+end
+
+--登出游戏
+function player_handle.delay_logout()
+    local player_info = GetPlayer()
+    if player_info.online <= 0 then
+        return
+    end
+    PlayerSet({online = 0})
+    --派发事件
+    pe.event_dispatch(EVENT_DELAY_LOGOUT)
+end
+
+--退出游戏
+function player_handle.logout()
+    local player_info = GetPlayer()
+    player_handle.remove_player_online(player_info.id)
+    --派发事件
+    pe.event_dispatch(EVENT_LOGOUT)
 end
 
 ----------------------------------内部处理

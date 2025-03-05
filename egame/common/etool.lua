@@ -1,6 +1,7 @@
 local skynet = require "skynet"
 local os = require "os"
 local sharedata = require "skynet.sharedata"
+local tablehelp = require "tablehelp"
 
 --获取周开始时间戳
 function get_week_start_time()
@@ -26,100 +27,106 @@ end
 
 --获取table长度(hashmap的table)
 function table_len(arr)
-    if type(arr) ~= "table" then
-        return 0
-    end
+    -- if type(arr) ~= "table" then
+    --     return 0
+    -- end
 
-    local len = 0
-    for k, v in pairs(arr) do
-        len = len + 1
-    end   
-    return len
+    -- local len = 0
+    -- for k, v in pairs(arr) do
+    --     len = len + 1
+    -- end   
+    -- return len
+    return tablehelp.table_len(arr)
 end
 
 --判断是否在table中
 function is_in_table(arr, val)
-    if type(arr) ~= "table" then
-        return false
-    end
+    -- if type(arr) ~= "table" then
+    --     return false
+    -- end
 
-    for k, v in pairs(t) do
-        if v == val then
-            return true
-        end
-    end
-    return false
+    -- for k, v in pairs(arr) do
+    --     if v == val then
+    --         return true
+    --     end
+    -- end
+    -- return false
+    return tablehelp.is_in_table(arr, val)
 end
 
 --判断是否在table中
 function is_in_table_func(arr, func, ...)
-    if type(arr) ~= "table" then
-        return false
-    end
+    -- if type(arr) ~= "table" then
+    --     return false
+    -- end
 
-    for k, v in pairs(arr) do
-        if func(k, v, ...) then
-            return true
-        end
-    end
-    return false
+    -- for k, v in pairs(arr) do
+    --     if func(k, v, ...) then
+    --         return true
+    --     end
+    -- end
+    -- return false
+    return tablehelp.is_in_table_func(arr, func, ...)
 end
 
 --从table中获取
 function get_in_table(arr, val)
-    if type(arr) ~= "table" then
-        return nil
-    end
+    -- if type(arr) ~= "table" then
+    --     return nil
+    -- end
 
-    for k, v in pairs(t) do
-        if v == val then
-            return v
-        end
-    end
-    return nil
+    -- for k, v in pairs(t) do
+    --     if v == val then
+    --         return v
+    --     end
+    -- end
+    -- return nil
+    return tablehelp.get_in_table(arr, val)
 end
 
 --从table中获取
 function get_in_table_func(arr, func, ...)
-    if type(arr) ~= "table" then
-        return nil
-    end
+    -- if type(arr) ~= "table" then
+    --     return nil
+    -- end
 
-    for k, v in pairs(arr) do
-        if func(k, v, ...) then
-            return v
-        end
-    end
-    return nil
+    -- for k, v in pairs(arr) do
+    --     if func(k, v, ...) then
+    --         return v
+    --     end
+    -- end
+    -- return nil
+    return tablehelp.get_in_table_func(arr, func, ...)
 end
 
 --从table中移除
 function remove_in_table(arr, val)
-    if type(arr) ~= "table" then
-        return nil
-    end
+    -- if type(arr) ~= "table" then
+    --     return nil
+    -- end
     
-    local arr1 = {}
-    for k, v in pairs(arr) do
-        if not v == val then
-            arr1.k = v
-        end       
-    end
-    return arr1
+    -- for k, v in pairs(arr) do
+    --     if v == val then
+    --         table.remove(arr, k)
+    --     end       
+    -- end
+    -- return arr
+    return tablehelp.remove_in_table(arr, val)
 end
 
 --输出table
 function print_table(arr)
-    if type(arr) == "table" then
-        for k, v in pairs(arr) do
-            if type(v) == "table" then
-                print("key=", k, "val=")
-                print_table(v)
-            else
-                print("key=", k, "val=", v)
-            end
-        end
-    end
+    -- if type(arr) == "table" then
+    --     for k, v in pairs(arr) do
+    --         if type(v) == "table" then
+    --             print("key=", k, "val=")
+    --             print_table(v)
+    --         else
+    --             print("key=", k, "val=", v)
+    --         end
+    --     end
+    -- end
+    tablehelp.print_table(arr)
 end
 
 --获取对应的key
@@ -160,4 +167,14 @@ function log_print(argsText, ...)
     else
         skynet.error(argsText, ...)
     end
+end
+
+--随机整数
+function rand(min, max)
+    math.randomseed(os.time())
+    return math.random(min, max)
+end
+
+function etool_test(val)
+    log_print("etool_test:", val)
 end

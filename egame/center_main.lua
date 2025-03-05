@@ -13,7 +13,7 @@ skynet.start(function()
     skynet.send(center, "lua", "init")
 
     --测试
-    -- local test = skynet.newservice("test/test")
-    -- skynet.send(test, "lua", "init")
-    skynet.exit()
+    -- local test = skynet.newservice("test")
+    -- skynet.send(test, "lua", "test")
+    -- skynet.exit()
 end)

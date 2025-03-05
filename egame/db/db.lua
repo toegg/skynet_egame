@@ -1,4 +1,4 @@
-local skynet = require "skynet"
+local skynet = require "skynetex"
 require "skynet.manager"
 local mysql = require "skynet.db.mysql"
 require "common.etool"
@@ -59,7 +59,7 @@ end
 skynet.start(function(...)
     skynet.name(".db", skynet.self())
     -- 注册skynet.dispatch处理函数
-    skynet.dispatch("lua", function (session, source, cmd, ...) 
+    skynet.dispatchex("lua", function (session, source, cmd, ...) 
         local f = assert(CMD[cmd])
         local status, err = skynet.pcall(f, ...)
         if not status then

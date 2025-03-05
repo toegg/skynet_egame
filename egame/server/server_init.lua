@@ -20,6 +20,9 @@ skynet.start(function()
     --初始化db池
     local db = skynet.newservice("db")
     skynet.send(db, "lua", "init")
+    --初始化redis池
+    local rd = skynet.newservice("db/rd")
+    skynet.send(rd, "lua", "init") 
 
     --初始化配置
     init_game_conf()
@@ -30,6 +33,11 @@ skynet.start(function()
         skynet.send(id_create, "lua", "init") 
     end
 
+    --启动cache层服务
+    skynet.newservice("cache/cache_mgr")
+
+    --启动热更
+    skynet.newservice("hotfix")
     skynet.exit()
 end)
 

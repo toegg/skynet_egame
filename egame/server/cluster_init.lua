@@ -12,13 +12,22 @@ skynet.start(function()
     else
         sharedata.new("logInfo", {log = true})
     end
+
+    --初始化热更服务
+    skynet.newservice("hotfix")
     
     --初始化db池
     local db = skynet.newservice("db")
     skynet.send(db, "lua", "init")
+    --初始化redis池
+    local rd = skynet.newservice("db/rd")
+    skynet.send(rd, "lua", "init")   
 
     --初始化配置
     init_game_conf()
+
+    --启动cache层服务
+    skynet.newservice("cache/cache_mgr")
 
     skynet.exit()
 end)

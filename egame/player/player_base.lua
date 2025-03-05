@@ -21,8 +21,13 @@ end
 
 --玩家登录
 function PlayerLogin(role_id, pid)
-    local res = db.query(string.format("select * from player where role_id=%d", role_id))
-    if res.err == nil and #res > 0 then
+    -- local res = db.query(string.format("select * from player where role_id=%d", role_id))
+    -- if res.err == nil and #res > 0 then
+    --     PlayerSet({id = role_id, name = res[1].name, online = 1, pid = pid, node = skynet.getenv("node")})
+    --     return true
+    -- end
+    local res = skynet.call(".cache.conf.cache_player", "lua", "fetch", "player", role_id)
+    if #res > 0 then
         PlayerSet({id = role_id, name = res[1].name, online = 1, pid = pid, node = skynet.getenv("node")})
         return true
     end
@@ -33,14 +38,21 @@ end
 function PlayerReg()
     local role_id = skynet.call(skynet.localname(".id_player"), "lua", "get_id")
     if role_id > 0 then
-        local res = db.query(string.format("insert into player(role_id) values (%d)", role_id))
-        if res.err then
-            log_print("PlayerReg Err:", res.err)
-            return 0, false
+        -- local res = db.query(string.format("insert into player(role_id) values (%d)", role_id))
+        -- if res.err then
+        --     log_print("PlayerReg Err:", res.err)
+        --     return 0, false
+        -- else
+        --     if res.affected_rows and res.affected_rows > 0 then
+        --         return role_id, true
+        --     end 
+        -- end
+        local res = skynet.call(".cache.conf.cache_player", "lua", "replace", "player", {role_id = role_id, name = ""})
+        if res == ERROR_SUCCESS then
+            return role_id, true
         else
-            if res.affected_rows and res.affected_rows > 0 then
-                return role_id, true
-            end 
+            log_print("PlayerReg Err:", res)
+            return 0, false
         end
     end 
     return 0, false
