@@ -322,7 +322,7 @@ end
 
 --删除
 function CMD.delete(tab, key, index)
-    local result = false
+    local result = ERROR_FAIL
     if state.datas_index[tab] then
         local indexs = state.datas_index[tab][key]
         if not indexs then
@@ -340,7 +340,7 @@ function CMD.delete(tab, key, index)
                     for k, v in pairs(indexs) do
                         state.db_del_waits[tab][v] = {key = key, type = 2, is_sync = 0, sync_time = 0} 
                     end
-                    result = true
+                    result = ERROR_SUCCESS
                 else
                     log_print(res)
                 end 
@@ -350,10 +350,10 @@ function CMD.delete(tab, key, index)
                     local res = rd.query("hset", "dirty_"..tab, index, 1)
                     if not res.err then
                         state.db_del_waits[tab][index] = {key = key, type = 1, is_sync = 0, sync_time = 0} 
-                        result = true
+                        result = ERROR_SUCCESS
                     end
                 else
-                    result = true 
+                    result = ERROR_SUCCESS 
                 end
             end
         end
