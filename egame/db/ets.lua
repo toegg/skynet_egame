@@ -29,6 +29,10 @@ function ets.lookup(name, key)
     return ets_cache.lookup(name, key)
 end
 
+function ets.lookup_all(name)
+    return ets_cache.lookup_all(name)
+end
+
 function ets.delete(name, key)
     return ets_cache.delete(name, key)
 end
